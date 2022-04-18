@@ -4,6 +4,7 @@ using namespace std;
 
 int main()
 {
+    system("clear");
     Game *game = new Game();
-    game->displayBoard();
+    game->start();
 }

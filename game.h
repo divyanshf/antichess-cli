@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include "color.h"
 #include "player.h"
+
 using namespace std;
 
 // Game Class
@@ -20,18 +21,39 @@ private:
     // Map integers to pieces
     unordered_map<int, char> pieceMap;
 
+    // Current Player
+    int turn = 0;
+
+    // Players
+    Player *p1, *p2;
+
+    // Player Options
+    vector<string> strOptions;
+    enum options
+    {
+        Q = 3,
+        D = 1,
+        M = 2
+    };
+
 public:
     Game();
     Game(vector<vector<int>> &state);
+    void start();
+    void reset();
+    void init();
     void initPieceMap();
     void displayBoard();
+    void changeTurn();
+    void makeMove();
+    int selectOption();
 };
 
 // Constructor
 Game::Game()
 {
-    initPieceMap();
-    board.resize(8, vector<int>(8, 0));
+    this->init();
+    this->reset();
 
     // Placing the pawns
     for (int j = 0; j < 8; j++)
@@ -57,8 +79,61 @@ Game::Game()
 // Constructor with initial state of board
 Game::Game(vector<vector<int>> &state)
 {
-    initPieceMap();
+    this->init();
+    this->reset();
     board = state;
+}
+
+// Initialize Variables
+void Game::init()
+{
+    // Create new players
+    p1 = new Player(true);
+    p2 = new Player(false);
+
+    this->initPieceMap();
+
+    // Set options
+    (this->strOptions).push_back("Display Board");
+    (this->strOptions).push_back("Make A Move");
+    (this->strOptions).push_back("Quit");
+}
+
+// Reset Other Variables
+void Game::reset()
+{
+    this->turn = 1;
+    (this->board).resize(8, vector<int>(8, 0));
+}
+
+// Start the game
+void Game::start()
+{
+    while (1)
+    {
+        bool q = false;
+        options opt = (options)this->selectOption();
+        system("clear");
+        switch (opt)
+        {
+        case Q:
+            q = true;
+            break;
+
+        case M:
+            makeMove();
+            break;
+
+        case D:
+            this->displayBoard();
+            break;
+
+        default:
+            break;
+        }
+        if (q)
+            break;
+    }
 }
 
 // Initialize piece map
@@ -78,6 +153,16 @@ void Game::displayBoard()
 {
     cout << "BLACK" << endl;
 
+    for (int i = 0; i < 5; i++)
+        cout << " ";
+
+    for (char ch = 'A'; ch <= 'H'; ch++)
+    {
+        cout << ch << " ";
+    }
+    cout << endl;
+    for (int i = 0; i < 3; i++)
+        cout << " ";
     cout << "+"
          << " ";
     for (int j = 0; j < 8; j++)
@@ -86,7 +171,8 @@ void Game::displayBoard()
     cout << "+" << endl;
     for (int i = 0; i < 8; i++)
     {
-        cout << "|"
+        cout << " " << 8 - i << " "
+             << "|"
              << " ";
         for (int j = 0; j < 8; j++)
         {
@@ -98,6 +184,9 @@ void Game::displayBoard()
         cout << "|"
              << " " << 8 - i << endl;
     }
+
+    for (int i = 0; i < 3; i++)
+        cout << " ";
     cout << "+"
          << " ";
     for (int j = 0; j < 8; j++)
@@ -105,12 +194,37 @@ void Game::displayBoard()
              << " ";
     cout << "+" << endl;
 
+    for (int i = 0; i < 5; i++)
+        cout << " ";
+
     for (char ch = 'A'; ch <= 'H'; ch++)
     {
         cout << ch << " ";
     }
     cout << endl;
     cout << "WHITE" << endl;
+}
+
+// Change Player Turn
+void Game::changeTurn()
+{
+    turn = -turn;
+}
+
+// Make A Move
+void Game::makeMove() {}
+
+// Select Option For PLayer
+int Game::selectOption()
+{
+    for (int i = 0; i < (this->strOptions).size(); i++)
+    {
+        cout << "(" << i + 1 << ")" << (this->strOptions)[i] << endl;
+    }
+    cout << "Enter the option : ";
+    int opt;
+    cin >> opt;
+    return opt;
 }
 
 #endif
