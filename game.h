@@ -5,6 +5,8 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include "color.h"
+#include "player.h"
 using namespace std;
 
 // Game Class
@@ -74,20 +76,41 @@ void Game::initPieceMap()
 // Display Board State
 void Game::displayBoard()
 {
+    cout << "BLACK" << endl;
+
+    cout << "+"
+         << " ";
+    for (int j = 0; j < 8; j++)
+        cout << "-"
+             << " ";
+    cout << "+" << endl;
+    for (int i = 0; i < 8; i++)
+    {
+        cout << "|"
+             << " ";
+        for (int j = 0; j < 8; j++)
+        {
+            int color = board[i][j] == 0 ? 31 : board[i][j] > 0 ? 37
+                                                                : 30;
+            col::printInColor(pieceMap[(abs(board[i][j]))], color, 1);
+            cout << " ";
+        }
+        cout << "|"
+             << " " << 8 - i << endl;
+    }
+    cout << "+"
+         << " ";
+    for (int j = 0; j < 8; j++)
+        cout << "-"
+             << " ";
+    cout << "+" << endl;
+
     for (char ch = 'A'; ch <= 'H'; ch++)
     {
         cout << ch << " ";
     }
-    cout << endl
-         << endl;
-    for (int i = 0; i < 8; i++)
-    {
-        for (int j = 0; j < 8; j++)
-        {
-            cout << pieceMap[(abs(board[i][j]))] << " ";
-        }
-        cout << " " << 8 - i << endl;
-    }
+    cout << endl;
+    cout << "WHITE" << endl;
 }
 
 #endif
