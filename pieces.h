@@ -60,7 +60,7 @@ public:
     }
 
     // Returns if the move is valid
-    virtual bool move(string to)
+    virtual bool move(Piece *to)
     {
         return false;
     }
@@ -85,7 +85,7 @@ public:
     }
 
     // Pawn Move
-    bool move(string to)
+    bool move(Piece *to)
     {
         return false;
     }
@@ -104,7 +104,7 @@ public:
     }
 
     // Rook Move
-    bool move(string to)
+    bool move(Piece *to)
     {
         return false;
     }
@@ -123,7 +123,7 @@ public:
     }
 
     // Knight Move
-    bool move(string to)
+    bool move(Piece *to)
     {
         return false;
     }
@@ -142,7 +142,7 @@ public:
     }
 
     // Bishop Move
-    bool move(string to)
+    bool move(Piece *to)
     {
         return false;
     }
@@ -161,7 +161,7 @@ public:
     }
 
     // Queen Move
-    bool move(string to)
+    bool move(Piece *to)
     {
         return false;
     }
@@ -180,7 +180,7 @@ public:
     }
 
     // King Move
-    bool move(string to)
+    bool move(Piece *to)
     {
         return false;
     }

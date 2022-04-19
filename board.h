@@ -20,17 +20,28 @@ private:
 
 public:
     Board();
+    ~Board();
     void reset();
     void display();
     pair<int, int> getIntCordinates(string pos);
     Piece *getPiece(int row, int col);
+    void setPiece(Piece *p, int row, int col);
 };
 
-// Initialize
+// Constructor
 Board::Board()
 {
     (this->board).resize(8, vector<Piece *>(8, nullptr));
     this->reset();
+}
+
+// Destructor
+Board::~Board()
+{
+    for (int i = 0; i < 8; i++)
+        for (int j = 0; j < 8; j++)
+            delete (this->board[i][j]);
+    this->board.clear();
 }
 
 // Get Cordinates in Integer
@@ -48,6 +59,16 @@ Piece *Board::getPiece(int row, int col)
     if (row < 0 || row > 7 || col < 0 || col > 7)
         return nullptr;
     return (this->board)[row][col];
+}
+
+// Set piece at a position
+void Board::setPiece(Piece *p, int row, int col)
+{
+    if (row < 0 || row > 7 || col < 0 || col > 7)
+    {
+        return;
+    }
+    (this->board)[row][col] = p;
 }
 
 // Display Horizontal Border

@@ -10,31 +10,45 @@ class Player
 {
 private:
     int score; // Score
+    bool white;
 
 public:
     Player(bool w);
-    bool white;
     int getScore();
+    bool isWhite();
     void setScore(int s);
+    void incScore(int val);
 };
 
 // Constructor
 Player::Player(bool w)
 {
-    score = 0;
-    white = w;
+    this->score = 0;
+    this->white = w;
+}
+
+// Is the player white
+bool Player::isWhite()
+{
+    return this->white;
 }
 
 // Score getter
 int Player::getScore()
 {
-    return score;
+    return this->score;
 }
 
 // Score setter
 void Player::setScore(int s)
 {
-    score = s;
+    this->score = s;
+}
+
+// Increment PLayer Score
+void Player::incScore(int val)
+{
+    this->score += val;
 }
 
 #endif
