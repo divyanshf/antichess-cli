@@ -1,10 +1,15 @@
 #include <iostream>
 #include "game.h"
+#include "player.h"
 using namespace std;
 
 int main()
 {
     system("clear");
-    Game *game = new Game();
+
+    // Initialize Game
+    Game *game = new Game(true, false);
+
+    // Start Game
     game->start();
 }
