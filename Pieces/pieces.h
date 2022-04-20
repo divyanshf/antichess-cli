@@ -186,7 +186,6 @@ public:
             {
                 if (board[i][pFrom.second]->isEmpty() == false)
                 {
-                    cout << i << pFrom.second << endl;
                     allEmpty = false;
                     break;
                 }
@@ -302,6 +301,7 @@ public:
         pair<int, int> pFrom = this->getPos();
         pair<int, int> pTo = to->getPos();
 
+        cout << 1;
         // No piece in same row
         if (pFrom.first == pTo.first)
         {
@@ -317,8 +317,11 @@ public:
             }
             if (!allEmpty)
                 return false;
+
+            return true;
         }
 
+        cout << 2;
         // No piece in same column
         if (pFrom.second == pTo.second)
         {
@@ -335,6 +338,8 @@ public:
             }
             if (!allEmpty)
                 return false;
+
+            return true;
         }
 
         // Slope should be 1 or -1
@@ -346,6 +351,7 @@ public:
         int iStep = pTo.first - pFrom.first > 0 ? 1 : -1;
         int jStep = pTo.second - pFrom.second > 0 ? 1 : -1;
 
+        cout << 4;
         // No piece in between
         bool found = false;
         for (int i = pFrom.first + iStep, j = pFrom.second + jStep;
