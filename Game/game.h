@@ -4,10 +4,12 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 #include <unordered_map>
-#include "color.h"
-#include "player.h"
-#include "board.h"
+#include "../color.h"
+#include "../Player/player.h"
+#include "../Board/board.h"
+#include "../Pieces/pieces.h"
 
 using namespace std;
 
@@ -26,6 +28,7 @@ public:
     void start();
     void initOptions();
     char showOptions();
+    void changeTurn();
     bool makeMove();
 };
 
@@ -37,7 +40,7 @@ Game::Game(bool f = true, bool s = false)
     this->p2 = new Player(s);
 
     // Setup turn
-    this->turn = true;
+    this->turn = s;
 
     // Setup board
     this->b = new Board();
@@ -75,13 +78,21 @@ char Game::showOptions()
     return choice;
 }
 
+// Change Turn
+void Game::changeTurn()
+{
+    this->turn = !this->turn;
+}
+
 // Make a move
 // Returns validity
 bool Game::makeMove()
 {
-    cout << "Enter a move (ex. A4 to B5) : ";
+    cout << "Enter a move (ex. A4 to B5) : " << endl;
     string move;
-    cin >> move;
+    getline(cin, move);
+
+    cout << move << endl;
 
     // Invalid Format
     if (move.length() != 8)
@@ -91,6 +102,8 @@ bool Game::makeMove()
     pair<int, int> to = this->b->getIntCordinates(move.substr(6, 2));
 
     // Invalid Cordinates
+    if (from.first == to.first && from.second == to.second)
+        return false;
     if (from.first < 0 || from.second < 0 || from.first > 7 || from.second > 7)
         return false;
     if (to.first < 0 || to.second < 0 || to.first > 7 || to.second > 7)
@@ -99,31 +112,32 @@ bool Game::makeMove()
     Piece *pFrom = this->b->getPiece(from.first, from.second);
 
     // Invalid From Piece
-    if (!pFrom || pFrom->isWhite() != turn)
+    if (pFrom->isEmpty() || pFrom->isWhite() != this->turn)
         return false;
 
     Piece *pTo = this->b->getPiece(to.first, to.second);
 
     // Invalid To Piece
-    if (pTo->isWhite() == turn)
+    if (!pTo->isEmpty() && pTo->isWhite() == this->turn)
         return false;
 
     // Validity of move according to piece
-    bool valid = pFrom->move(pTo);
+    bool valid = pFrom->move(pTo, this->b->getBoard());
     if (!valid)
         return false;
 
     // Moving pFrom to pTo
+    pFrom->setPos(to.first, to.second);
     this->b->setPiece(pFrom, to.first, to.second);
-    this->b->setPiece(nullptr, from.first, from.second);
+    this->b->setPiece(new Empty(from.first, from.second), from.first, from.second);
 
     // Increase Score for pTo
     if (pTo)
     {
-        if (p1->isWhite() != turn)
-            p1->incScore(1);
+        if (this->p1->isWhite() != this->turn)
+            this->p1->incScore(1);
         else
-            p2->incScore(1);
+            this->p2->incScore(1);
         delete (pTo);
     }
 
@@ -133,31 +147,49 @@ bool Game::makeMove()
 // Start the game
 void Game::start()
 {
-    this->b->display();
-    while (1)
+    while (true)
     {
-        char op = this->showOptions();
+        system("clear");
         bool q = false;
+        int winner = 0;
+        string curPlayer = this->p1->isWhite() == turn ? "1" : "2"; // True->p1 False->p2
+        string info = "Turn : Player " + curPlayer;
+        col::print(info + "\n", 33, 1);
+        char op = this->showOptions();
+        system("clear");
         switch (op)
         {
         case 'Q':
+        {
             q = true;
+            winner = this->p1->isWhite() == turn ? 2 : 1;
+            system("clear");
             break;
+        }
 
         case 'B':
-            system("clear");
+        {
             this->b->display();
-            break;
+            cin.get();
+            cin.get();
 
+            break;
+        }
         case 'M':
-            while (1)
+        {
+            this->b->display();
+            col::print(info + "\n", 33, 1);
+            while (true)
             {
                 bool valid = this->makeMove();
                 if (valid)
                     break;
                 col::print("Invalid Move !\n", 31, 1);
             }
+            // Check for winning condition
+            this->changeTurn();
             break;
+        }
 
         default:
             break;
@@ -165,9 +197,14 @@ void Game::start()
 
         if (q)
         {
+            string res = "";
+            if (winner != 0)
+                res = "Player " + to_string(winner) + " wins!\n";
+            else
+                res = "Draw !\n";
+            col::print(res, 32, 1);
             break;
         }
     }
 }
-
 #endif

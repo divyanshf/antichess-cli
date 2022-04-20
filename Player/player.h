@@ -50,5 +50,4 @@ void Player::incScore(int val)
 {
     this->score += val;
 }
-
 #endif

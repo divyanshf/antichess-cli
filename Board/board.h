@@ -1,9 +1,13 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#pragma once
+
+class Piece;
+
 #include <vector>
 #include <string>
-#include "pieces.h"
+#include "../Pieces/pieces.h"
 
 using namespace std;
 
@@ -23,11 +27,11 @@ public:
     ~Board();
     void reset();
     void display();
+    vector<vector<Piece *>> &getBoard();
     pair<int, int> getIntCordinates(string pos);
     Piece *getPiece(int row, int col);
     void setPiece(Piece *p, int row, int col);
 };
-
 // Constructor
 Board::Board()
 {
@@ -44,12 +48,18 @@ Board::~Board()
     this->board.clear();
 }
 
+// Get the board
+vector<vector<Piece *>> &Board::getBoard()
+{
+    return this->board;
+}
+
 // Get Cordinates in Integer
 pair<int, int> Board::getIntCordinates(string pos)
 {
     if (pos.length() != 2)
         return {-1, -1};
-    int col = pos[0] - 'A', row = pos[1] - '0';
+    int col = pos[0] - 'A', row = '8' - pos[1];
     return {row, col};
 }
 
@@ -105,8 +115,8 @@ void Board::display()
         col::print(" ", 37, 45, 1);
         for (int j = 0; j < 8; j++)
         {
-            char rep = this->board[i][j] ? (this->board[i][j])->getRep() : '-';
-            int color = this->board[i][j] ? (this->board[i][j])->getColor() : 31;
+            char rep = (this->board[i][j])->getRep();
+            int color = rep == '-' ? 31 : (this->board[i][j])->getColor();
             col::print(rep, color, 45, 1);
             col::print(" ", color, 45, 1);
         }
@@ -124,11 +134,11 @@ void Board::display()
 // Reset Board
 void Board::reset()
 {
-    for (int j = 0; j < 8; j++)
-    {
-        board[1][j] = new Pawn(0, j, false);
-        board[6][j] = new Pawn(6, j, true);
-    }
+    // for (int j = 0; j < 8; j++)
+    // {
+    //     board[1][j] = new Pawn(1, j, false);
+    //     board[6][j] = new Pawn(6, j, true);
+    // }
     for (int j = 0; j < 2; j++)
     {
         board[0][j * 7] = new Rook(0, j * 7, false);
@@ -148,6 +158,13 @@ void Board::reset()
     {
         board[i * 7][3] = new Queen(i * 7, 3, i != 0);
         board[i * 7][4] = new King(i * 7, 4, i != 0);
+    }
+    for (int i = 1; i < 7; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            board[i][j] = new Empty(i, j);
+        }
     }
 }
 
