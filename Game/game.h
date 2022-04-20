@@ -169,7 +169,7 @@ bool Game::makeMove()
     this->b->setPiece(new Empty(from.first, from.second), from.first, from.second);
 
     // Increase Score for pTo
-    if (pTo)
+    if (pTo->isEmpty() == false)
     {
         if (this->p1->isWhite() != this->turn)
             this->p1->incScore(1);
@@ -190,7 +190,7 @@ void Game::start()
         bool q = false;
         int winner = 0;
         string curPlayer = this->p1->isWhite() == turn ? "1" : "2"; // True->p1 False->p2
-        string info = "Turn : Player " + curPlayer;
+        string info = "Turn : Player " + curPlayer + " (" + (turn ? "WHITE" : "BLACK") + ")";
         col::print(info + "\n", 33, 1);
         char op = this->showOptions();
         system("clear");
