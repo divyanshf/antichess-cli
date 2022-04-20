@@ -104,12 +104,14 @@ class Pawn : public Piece
 {
 private:
     int dir; // UP=-1 DOWN=1
+    bool first;
 
 public:
     Pawn(int r, int c, bool w) : Piece(r, c, w)
     {
         this->setRep('P');
         this->dir = w ? -1 : 1;
+        this->first = true;
     }
 
     // Pawn Move
@@ -121,7 +123,10 @@ public:
         pair<int, int> posFrom = this->getPos();
 
         // Allowed difference in row and col
-        if (posTo.first - posFrom.first != this->dir)
+        if ((posTo.first - posFrom.first) * this->dir < 0)
+            return false;
+
+        if (abs(posTo.first - posFrom.first) != 2 && abs(posTo.first - posFrom.first) != 1)
             return false;
 
         // Same Column but destination contains a player.
@@ -131,6 +136,7 @@ public:
         if (abs(posFrom.second - posTo.second) == 1 && to->isEmpty())
             return false;
 
+        this->first = false;
         return true;
     }
 };

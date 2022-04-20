@@ -134,11 +134,11 @@ void Board::display()
 // Reset Board
 void Board::reset()
 {
-    // for (int j = 0; j < 8; j++)
-    // {
-    //     board[1][j] = new Pawn(1, j, false);
-    //     board[6][j] = new Pawn(6, j, true);
-    // }
+    for (int j = 0; j < 8; j++)
+    {
+        board[1][j] = new Pawn(1, j, false);
+        board[6][j] = new Pawn(6, j, true);
+    }
     for (int j = 0; j < 2; j++)
     {
         board[0][j * 7] = new Rook(0, j * 7, false);
@@ -159,7 +159,7 @@ void Board::reset()
         board[i * 7][3] = new Queen(i * 7, 3, i != 0);
         board[i * 7][4] = new King(i * 7, 4, i != 0);
     }
-    for (int i = 1; i < 7; i++)
+    for (int i = 2; i < 6; i++)
     {
         for (int j = 0; j < 8; j++)
         {

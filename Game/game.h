@@ -30,6 +30,8 @@ public:
     char showOptions();
     void changeTurn();
     bool makeMove();
+    void displayScores();
+    bool isEnd();
 };
 
 // Constructor
@@ -40,7 +42,7 @@ Game::Game(bool f = true, bool s = false)
     this->p2 = new Player(s);
 
     // Setup turn
-    this->turn = s;
+    this->turn = f;
 
     // Setup board
     this->b = new Board();
@@ -82,6 +84,41 @@ char Game::showOptions()
 void Game::changeTurn()
 {
     this->turn = !this->turn;
+}
+
+// Display Scores
+void Game::displayScores()
+{
+    col::print("Scores\n", 32, 1);
+    string text = "Player 1 : " +
+                  to_string(this->p1->getScore()) +
+                  "\nPlayer 2 : " + to_string(this->p2->getScore()) +
+                  "\n";
+    col::print(text, 32, 1);
+}
+
+// Has the game ended
+bool Game::isEnd()
+{
+    bool found1 = false, found2 = false;
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            Piece *p = this->b->getPiece(i, j);
+            if (p->isEmpty() == true)
+                continue;
+            if (p->isWhite() == this->turn)
+                found1 = true;
+            else if (p->isWhite() != this->turn)
+                found2 = true;
+        }
+    }
+    // If a piece for one player doesnt exist
+    if (!found1 || !found2)
+        return true;
+
+    return false;
 }
 
 // Make a move
@@ -163,13 +200,14 @@ void Game::start()
         {
             q = true;
             winner = this->p1->isWhite() == turn ? 2 : 1;
-            system("clear");
             break;
         }
 
         case 'B':
         {
             this->b->display();
+            this->displayScores();
+            cout << "Press Enter to continue...";
             cin.get();
             cin.get();
 
@@ -178,6 +216,7 @@ void Game::start()
         case 'M':
         {
             this->b->display();
+            this->displayScores();
             col::print(info + "\n", 33, 1);
             while (true)
             {
@@ -187,7 +226,18 @@ void Game::start()
                 col::print("Invalid Move !\n", 31, 1);
             }
             // Check for winning condition
-            this->changeTurn();
+            bool e = this->isEnd();
+            if (e)
+            {
+                q = true;
+                int score1 = this->p1->getScore(), score2 = this->p2->getScore();
+                winner = score1 == score2 ? 0 : (score1 > score2) ? 1
+                                                                  : 2;
+            }
+            else
+            {
+                this->changeTurn();
+            }
             break;
         }
 
@@ -195,6 +245,7 @@ void Game::start()
             break;
         }
 
+        // If end
         if (q)
         {
             string res = "";
@@ -207,4 +258,5 @@ void Game::start()
         }
     }
 }
+
 #endif
