@@ -114,7 +114,7 @@ bool Game::isEnd()
                 found2 = true;
         }
     }
-    // If a piece for one player doesnt exist
+    // If a piece for one player does not exist
     if (!found1 || !found2)
         return true;
 
@@ -128,8 +128,6 @@ bool Game::makeMove()
     cout << "Enter a move (ex. A4 to B5) : " << endl;
     string move;
     getline(cin, move);
-
-    cout << move << endl;
 
     // Invalid Format
     if (move.length() != 8)
@@ -218,6 +216,7 @@ void Game::start()
             this->b->display();
             this->displayScores();
             col::print(info + "\n", 33, 1);
+            cin.get();
             while (true)
             {
                 bool valid = this->makeMove();

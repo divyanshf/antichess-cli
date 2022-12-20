@@ -6,7 +6,6 @@
 class Board;
 
 #include <iostream>
-#include "../Board/board.h"
 using namespace std;
 
 // Chess Piece
@@ -126,7 +125,7 @@ public:
         if ((posTo.first - posFrom.first) * this->dir < 0)
             return false;
 
-        if (abs(posTo.first - posFrom.first) != 2 && abs(posTo.first - posFrom.first) != 1)
+        if ((!(this->first) && abs(posTo.first - posFrom.first) != 1) || (this->first && abs(posTo.first - posFrom.first) > 2))
             return false;
 
         // Same Column but destination contains a player.
